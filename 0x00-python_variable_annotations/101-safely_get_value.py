@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 """
 Module for safely retrieving values from
 a dictionary with a default fallback
