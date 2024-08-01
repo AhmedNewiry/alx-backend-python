@@ -7,6 +7,7 @@ The floor function takes a float argument and returns its floor value as an inte
 
 import math
 
+
 def floor(n: float) -> int:
     """
     Return the floor value of a float.
