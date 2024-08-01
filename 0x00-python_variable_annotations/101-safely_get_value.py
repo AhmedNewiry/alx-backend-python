@@ -11,13 +11,18 @@ from typing import Mapping, TypeVar, Any, Union
 T = TypeVar('T')
 
 
-def safely_get_value(dct: Mapping[Any, Any], key: Any, default: Union[T, None] = None) -> Union[Any, T]:
+def def safely_get_value(
+                         dct: Mapping[Any, Any],
+                         key: Any,
+                         default: Union[T, None] = None
+                         ) -> Union[Any, T]:
     """
     Safely get a value from a dictionary given a key.
     If the key is not present, return the default value.
 
     Args:
-    dct (Mapping[Any, Any]): A mapping (e.g., dictionary) from which to get the value.
+    dct (Mapping[Any, Any]): A mapping (e.g., dictionary) from
+    which to get the value.
     key (Any): The key whose associated value is to be returned.
     default (Union[T, None], optional): The value to return if
     the key is not found in the dictionary. Defaults to None.
