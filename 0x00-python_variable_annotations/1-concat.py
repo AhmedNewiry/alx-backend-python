@@ -5,6 +5,7 @@ This module provides a function to concatenate two strings.
 The concat function takes two string arguments and returns their concatenation.
 """
 
+
 def concat(str1: str, str2: str) -> str:
     """
     Concatenate two strings and return the result.
