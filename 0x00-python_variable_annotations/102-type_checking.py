@@ -3,10 +3,10 @@
 Module providing a function to zoom (duplicate) elements in a list.
 """
 
-from typing import List, Tuple
+from typing import List, Sequence, Union
 
-def zoom_array(lst: Tupe,
-               factor: int = 2) -> List:
+def zoom_array(lst: Sequence[Union[int, float]],
+               factor: int = 2) -> List[Union[int, float]]:
     """
     Zoom (duplicate) elements in the list based on the given factor.
 
