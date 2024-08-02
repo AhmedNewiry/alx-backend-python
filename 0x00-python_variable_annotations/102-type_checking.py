@@ -2,8 +2,8 @@
 """
 Module providing a function to zoom (duplicate) elements in a list.
 """
-
 from typing import List, Sequence, Union
+
 
 def zoom_array(lst: Sequence[Union[int, float]],
                factor: int = 2) -> List[Union[int, float]]:
@@ -25,6 +25,7 @@ def zoom_array(lst: Sequence[Union[int, float]],
         for _ in range(factor)
     ]
     return zoomed_in
+
 
 # Sample usage
 array = [12, 72, 91]
