@@ -6,7 +6,8 @@ and returns the list of all delays in ascending order.
 """
 from typing import List
 import asyncio
-from 0-basic_async_syntax import wait_random
+from importlib import import_module
+wait_random = import_module('0-basic_async_syntax').wait_random
 
 
 async def wait_n(n: int, max_delay: int) -> List[float]:
