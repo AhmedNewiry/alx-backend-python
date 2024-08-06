@@ -4,6 +4,7 @@ Module to create a coroutine that spawns multiple tasks
 """
 import asyncio
 from importlib import import_module
+from typing import List
 task_wait_random = import_module('3-tasks').task_wait_random
 
 
