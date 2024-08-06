@@ -4,10 +4,10 @@ This module defines an asynchronous generator coroutine.
 """
 import asyncio
 import random
-from typing import AsyncGenerator
+from typing import Generator
 
 
-async def async_generator() -> AsyncGenerator[float, None]:
+async def async_generator() -> Generator[float, None]:
     """
     Coroutine that asynchronously generates random numbers.
     This coroutine loops 10 times, each time
