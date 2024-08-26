@@ -14,8 +14,7 @@ class TestGithubOrgClient(unittest.TestCase):
     """
     Test case for the GithubOrgClient class.
 
-    This class contains tests that
-    verify the behavior of the org
+    This class contains tests that verify the behavior of the org
     method using various organization examples.
     """
 
@@ -31,10 +30,8 @@ class TestGithubOrgClient(unittest.TestCase):
 
         Args:
             org_name (str): The name of the organization to retrieve.
-            expected_result (dict): The expected result
-            from the org method.
-            mock_get_json (Mock): The mock object for the
-            get_json function.
+            expected_result (dict): The expected result from the org method.
+            mock_get_json (Mock): The mock object for the get_json function.
         """
         client = GithubOrgClient(org_name)
         result = client.org
