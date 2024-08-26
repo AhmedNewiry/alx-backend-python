@@ -72,10 +72,10 @@ class TestGetJson(unittest.TestCase):
 
         Args:
             test_url (str): The URL to pass to get_json.
-            test_payload (dict): The payload to return from the mocked get.
+            test_payload (dict): The payload to
+            return from the mocked get.
             mock_get (MagicMock): Mocked requests.get function.
         """
-        # Configure the mock to return a response with the test_payload
         mock_response = Mock()
         mock_response.json.return_value = test_payload
         mock_get.return_value = mock_response
@@ -104,10 +104,10 @@ class TestMemoize(unittest.TestCase):
             def a_property(self):
                 return self.a_method()
 
-        with patch.object(TestClass, 'a_method', return_value=42) as mock_a_method:
-            instance = TestClass()
-
-            # Call the memoized property twice
+        with patch.object(
+           TestClass, 'a_method', return_value=42
+        ) as mock_a_method:
+                # Call the memoized property twice
             result1 = instance.a_property
             result2 = instance.a_property
 
