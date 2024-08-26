@@ -45,7 +45,10 @@ class TestGithubOrgClient(unittest.TestCase):
         This method should return the correct URL based on the mocked org
         property.
         """
-        with patch('client.GithubOrgClient.org', new_callable=property) as mock_org:
+        with patch(
+                'client.GithubOrgClient.org',
+                new_callable=property
+                ) as mock_org:
             mock_org.return_value = {
                 "repos_url": "https://api.github.com/orgs/test/repos"
             }
@@ -64,11 +67,15 @@ class TestGithubOrgClient(unittest.TestCase):
         Test the public_repos method.
 
         Args:
-            mock_public_repos_url (MagicMock): Mocked _public_repos_url property.
+            mock_public_repos_url (MagicMock): Mocked
+            _public_repos_url property.
             mock_get_json (MagicMock): Mocked get_json function.
         """
-        mock_public_repos_url.return_value = "https://api.github.com/orgs/test/repos"
-        mock_get_json.return_value = [{"name": "repo1"}, {"name": "repo2"}]
+        mock_public_repos_url.return_value = \
+            "https://api.github.com/orgs/test/repos"
+        mock_get_json.return_value = [
+            {"name": "repo1"}, {"name": "repo2"}
+        ]
         client = GithubOrgClient("test")
 
         # Test public_repos method
@@ -138,7 +145,8 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             org_payload (dict): The payload for the organization.
             repos_payload (dict): The payload for the repositories.
             expected_repos (list): The expected list of repositories.
-            apache2_repos (list): The expected list of repositories with Apache 2.0 license.
+            apache2_repos (list): The expected list of repositories with
+                                  Apache 2.0 license.
         """
         client = GithubOrgClient("test")
         self.assertEqual(client.public_repos(), expected_repos)
