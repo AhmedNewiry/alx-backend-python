@@ -89,7 +89,7 @@ class TestGetJson(unittest.TestCase):
 class TestMemoize(unittest.TestCase):
     """
     Test case for the memoize decorator.
-    
+
     This class contains a test that verifies the behavior of the
     memoize decorator using a simple test class with a method
     and a memoized property.
@@ -109,7 +109,9 @@ class TestMemoize(unittest.TestCase):
             def a_property(self):
                 return self.a_method()
 
-        with patch.object(TestClass, 'a_method', return_value=42) as mock_method:
+        with patch.object(TestClass,
+                          'a_method',
+                          return_value=42) as mock_method:
             instance = TestClass()
 
             # Call a_property twice
