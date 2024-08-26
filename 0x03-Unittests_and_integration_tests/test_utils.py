@@ -8,10 +8,11 @@ from unittest.mock import patch, Mock
 from parameterized import parameterized
 from utils import access_nested_map, get_json
 
+
 class TestAccessNestedMap(unittest.TestCase):
     """
     Test case for the access_nested_map function.
-    
+
     This class contains tests that verify the behavior of the
     access_nested_map function using various input scenarios.
     """
@@ -25,7 +26,7 @@ class TestAccessNestedMap(unittest.TestCase):
         """
         Test that access_nested_map returns the expected value
         for given inputs.
-        
+
         Args:
             nested_map (dict): The nested dictionary to access.
             path (tuple): The path of keys to follow in the
@@ -45,7 +46,8 @@ class TestAccessNestedMap(unittest.TestCase):
 
         Args:
             nested_map (Mapping): The nested dictionary to access.
-            path (Sequence): The path of keys to follow in the nested dictionary.
+            path (Sequence): The path of keys to
+            follow in the nested dictionary.
         """
         with self.assertRaises(KeyError) as context:
             access_nested_map(nested_map, path)
@@ -82,6 +84,7 @@ class TestGetJson(unittest.TestCase):
             # Check that `requests.get` was called exactly once with test_url
             mock_get.assert_called_once_with(test_url)
             mock_get.reset_mock()  # Reset mock for the next iteration
+
 
 if __name__ == "__main__":
     unittest.main()
