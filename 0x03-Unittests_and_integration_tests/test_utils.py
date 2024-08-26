@@ -5,7 +5,7 @@ Unit tests for the access_nested_map function from the utils module.
 
 import unittest
 from parameterized import parameterized
-from utils import access_nested_map  # Assuming utils is the module where the function is defined
+from utils import access_nested_map, get_json
 
 class TestAccessNestedMap(unittest.TestCase):
     """
