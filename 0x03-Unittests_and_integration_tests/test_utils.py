@@ -85,13 +85,22 @@ class TestGetJson(unittest.TestCase):
             mock_get.assert_called_once_with(test_url)
             mock_get.reset_mock()  # Reset mock for the next iteration
 
+
 class TestMemoize(unittest.TestCase):
-    @patch.object
-    def test_memoize(self, mock_get):
+    """
+    Test case for the memoize decorator.
+    
+    This class contains a test that verifies the behavior of the
+    memoize decorator using a simple test class with a method
+    and a memoized property.
+    """
+
+    def test_memoize(self):
         """
-        Test that `memoize` decorator caches method results and avoids
-        redundant method calls.
+        Test that memoize caches the result of a method, ensuring that
+        the method is only called once even when accessed multiple times.
         """
+
         class TestClass:
             def a_method(self):
                 return 42
@@ -99,20 +108,17 @@ class TestMemoize(unittest.TestCase):
             @memoize
             def a_property(self):
                 return self.a_method()
-        
-        # Create an instance of TestClass
-        obj = TestClass()
-        
-        # Mock the a_method to ensure it gets called only once
-        with patch.object(obj, 'a_method', return_value=42) as mock_method:
-            # Call the memoized property twice
-            result1 = obj.a_property
-            result2 = obj.a_property
-            
-            # Assert that the results are the same
-            self.assertEqual(result1, result2)
-            
-            # Assert that a_method was called only once
+
+        with patch.object(TestClass, 'a_method', return_value=42) as mock_method:
+            instance = TestClass()
+
+            # Call a_property twice
+            result1 = instance.a_property
+            result2 = instance.a_property
+
+            # Verify the result is correct and a_method was only called once
+            self.assertEqual(result1, 42)
+            self.assertEqual(result2, 42)
             mock_method.assert_called_once()
 
 
