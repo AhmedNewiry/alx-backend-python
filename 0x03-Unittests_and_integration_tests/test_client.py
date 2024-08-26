@@ -6,7 +6,7 @@ Unit tests for the GithubOrgClient class from the client module.
 import unittest
 from unittest.mock import patch
 from parameterized import parameterized
-from client import GithubOrgClient  # Assuming client is where GithubOrgClient is defined
+from client import GithubOrgClient
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -45,7 +45,7 @@ class TestGithubOrgClient(unittest.TestCase):
         # Verify that the result is as expected
         self.assertEqual(result, expected_result)
 
-        def test_public_repos_url(self):
+    def test_public_repos_url(self):
         """
         Test that GithubOrgClient._public_repos_url returns the expected
         URL based on the org property.
@@ -53,7 +53,9 @@ class TestGithubOrgClient(unittest.TestCase):
         Use patch as a context manager to mock the org property and
         ensure that _public_repos_url returns the correct URL.
         """
-        with patch.object(GithubOrgClient, 'org', new_callable=property) as mock_org:
+        with patch.object(
+           GithubOrgClient, 'org', new_callable=property
+        ) as mock_org:
             # Set the return value for the mocked org property
             mock_org.return_value = {
                 "repos_url": "https://api.github.com/orgs/test-org/repos"
