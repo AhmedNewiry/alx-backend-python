@@ -57,48 +57,43 @@ class TestAccessNestedMap(unittest.TestCase):
 
 
 class TestGetJson(unittest.TestCase):
-    @patch('requests.get')
-    def test_get_json(self, mock_get):
+    """
+    Unit tests for the get_json function.
+    """
+
+    @parameterized.expand([
+        ("http://example.com", {"payload": True}),
+        ("http://holberton.io", {"payload": False})
+    ])
+    @patch('utils.requests.get')
+    def test_get_json(self, test_url, test_payload, mock_get):
         """
-        Test that `get_json` returns the expected result and that
-        `requests.get` is called with the correct URL.
+        Test get_json returns the expected result.
 
-        Uses unittest.mock to avoid making actual HTTP requests.
+        Args:
+            test_url (str): The URL to pass to get_json.
+            test_payload (dict): The payload to return from the mocked get.
+            mock_get (MagicMock): Mocked requests.get function.
         """
-        # Define test cases
-        test_cases = [
-            ("http://example.com", {"payload": True}),
-            ("http://holberton.io", {"payload": False}),
-        ]
+        # Configure the mock to return a response with the test_payload
+        mock_response = Mock()
+        mock_response.json.return_value = test_payload
+        mock_get.return_value = mock_response
 
-        for test_url, test_payload in test_cases:
-            # Setup the mock to return the test payload
-            mock_response = Mock()
-            mock_response.json.return_value = test_payload
-            mock_get.return_value = mock_response
-
-            # Call the function and check the result
-            result = get_json(test_url)
-            self.assertEqual(result, test_payload)
-
-            # Check that `requests.get` was called exactly once with test_url
-            mock_get.assert_called_once_with(test_url)
-            mock_get.reset_mock()  # Reset mock for the next iteration
+        # Test get_json function
+        result = get_json(test_url)
+        self.assertEqual(result, test_payload)
+        mock_get.assert_called_once_with(test_url)
 
 
 class TestMemoize(unittest.TestCase):
     """
-    Test case for the memoize decorator.
-
-    This class contains a test that verifies the behavior of the
-    memoize decorator using a simple test class with a method
-    and a memoized property.
+    Unit tests for the memoize decorator.
     """
 
     def test_memoize(self):
         """
-        Test that memoize caches the result of a method, ensuring that
-        the method is only called once even when accessed multiple times.
+        Test the memoize decorator to ensure it caches results.
         """
 
         class TestClass:
@@ -109,19 +104,17 @@ class TestMemoize(unittest.TestCase):
             def a_property(self):
                 return self.a_method()
 
-        with patch.object(TestClass,
-                          'a_method',
-                          return_value=42) as mock_method:
+        with patch.object(TestClass, 'a_method', return_value=42) as mock_a_method:
             instance = TestClass()
 
-            # Call a_property twice
+            # Call the memoized property twice
             result1 = instance.a_property
             result2 = instance.a_property
 
-            # Verify the result is correct and a_method was only called once
+            # Check that a_method is called only once
+            mock_a_method.assert_called_once()
+            self.assertEqual(result1, result2)
             self.assertEqual(result1, 42)
-            self.assertEqual(result2, 42)
-            mock_method.assert_called_once()
 
 
 if __name__ == "__main__":
