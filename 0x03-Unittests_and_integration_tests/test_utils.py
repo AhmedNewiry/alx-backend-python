@@ -52,5 +52,35 @@ class TestAccessNestedMap(unittest.TestCase):
         # Check that the exception message is as expected
         self.assertEqual(str(context.exception), f"'{path[-1]}'")
 
+
+class TestGetJson(unittest.TestCase):
+    @patch('requests.get')
+    def test_get_json(self, mock_get):
+        """
+        Test that `get_json` returns the expected result and that
+        `requests.get` is called with the correct URL.
+
+        Uses unittest.mock to avoid making actual HTTP requests.
+        """
+        # Define test cases
+        test_cases = [
+            ("http://example.com", {"payload": True}),
+            ("http://holberton.io", {"payload": False}),
+        ]
+
+        for test_url, test_payload in test_cases:
+            # Setup the mock to return the test payload
+            mock_response = Mock()
+            mock_response.json.return_value = test_payload
+            mock_get.return_value = mock_response
+
+            # Call the function and check the result
+            result = get_json(test_url)
+            self.assertEqual(result, test_payload)
+
+            # Check that `requests.get` was called exactly once with test_url
+            mock_get.assert_called_once_with(test_url)
+            mock_get.reset_mock()  # Reset mock for the next iteration
+
 if __name__ == "__main__":
     unittest.main()
