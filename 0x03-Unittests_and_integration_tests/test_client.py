@@ -40,8 +40,8 @@ class TestGithubOrgClient(unittest.TestCase):
         result = client.org
 
         # Check that get_json was called once with the correct URL
-        mock_get_json.
-        assert_called_once_with(f"https://api.github.com/orgs/{org_name}")
+        mock_get_json.assert_called_once_with(
+                f"https://api.github.com/orgs/{org_name}")
 
         # Check that the result is as expected
         self.assertEqual(result, expected_result)
