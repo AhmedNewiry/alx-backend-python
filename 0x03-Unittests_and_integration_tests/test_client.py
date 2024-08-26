@@ -6,15 +6,16 @@ Unit tests for the GithubOrgClient class from the client module.
 import unittest
 from unittest.mock import patch
 from parameterized import parameterized
-from client import GithubOrgClient  # Assuming client is the module where GithubOrgClient is defined
-from utils import get_json  # Assuming utils is the module where get_json is defined
+from client import GithubOrgClient
+from utils import get_json
 
 
 class TestGithubOrgClient(unittest.TestCase):
     """
     Test case for the GithubOrgClient class.
-    
-    This class contains tests that verify the behavior of the org
+
+    This class contains tests that
+    verify the behavior of the org
     method using various organization examples.
     """
 
@@ -30,15 +31,18 @@ class TestGithubOrgClient(unittest.TestCase):
 
         Args:
             org_name (str): The name of the organization to retrieve.
-            expected_result (dict): The expected result from the org method.
-            mock_get_json (Mock): The mock object for the get_json function.
+            expected_result (dict): The expected result
+            from the org method.
+            mock_get_json (Mock): The mock object for the
+            get_json function.
         """
         client = GithubOrgClient(org_name)
         result = client.org
 
         # Check that get_json was called once with the correct URL
-        mock_get_json.assert_called_once_with(f"https://api.github.com/orgs/{org_name}")
-        
+        mock_get_json.
+        assert_called_once_with(f"https://api.github.com/orgs/{org_name}")
+
         # Check that the result is as expected
         self.assertEqual(result, expected_result)
 
