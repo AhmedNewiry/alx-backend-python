@@ -21,31 +21,35 @@ from fixtures import TEST_PAYLOAD
 
 
 class TestGithubOrgClient(unittest.TestCase):
-    """
-    Unit tests for the GithubOrgClient class methods.
-    """
+    """Tests for the GithubOrgClient class."""
 
     @parameterized.expand([
-        ("google",),
-        ("abc",)
+        ("google", {"login": "google"}),
+        ("abc", {"login": "abc"}),
     ])
-    @patch('client.get_json')
-    def test_org(self, org_name, mock_get_json):
+    @patch("client.get_json")
+    def test_org(self, org: str, expected_resp: Dict, 
+                  mock_get_json: MagicMock) -> None:
         """
-        Test that GithubOrgClient.org returns the correct value.
+        Tests that the `org` method of GithubOrgClient returns the correct 
+        response.
 
         Args:
-            org_name (str): The name of the organization to test.
+            org (str): The name of the organization to test.
+            expected_resp (Dict): The expected response from the `org` method.
             mock_get_json (MagicMock): Mocked get_json function.
         """
-        mock_get_json.return_value = {"org": org_name}
-        client = GithubOrgClient(org_name)
-
-        # Test method
-        self.assertEqual(client.org, {"org": org_name})
+        mock_get_json.return_value = expected_resp
+        gh_org_client = GithubOrgClient(org)
+        
+        # Test that the org method returns the expected response
+        self.assertEqual(gh_org_client.org, expected_resp)
+        
+        # Verify that get_json was called once with the correct URL
         mock_get_json.assert_called_once_with(
-            f'https://api.github.com/orgs/{org_name}'
+            f"https://api.github.com/orgs/{org}"
         )
+
 
     def test_public_repos_url(self):
         """
