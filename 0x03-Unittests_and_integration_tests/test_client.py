@@ -72,32 +72,40 @@ class TestGithubOrgClient(unittest.TestCase):
                 "https://api.github.com/orgs/test/repos"
             )
 
-    @patch('client.get_json')
-    @patch('client.GithubOrgClient._public_repos_url', new_callable=property)
-    def test_public_repos(self, mock_public_repos_url, mock_get_json):
+    @parameterized.expand([
+        ("google", {"repos_url": "https://api.github.com/orgs/google/repos"},
+         [{"name": "repo1"}, {"name": "repo2"}]),
+        ("abc", {"repos_url": "https://api.github.com/orgs/abc/repos"},
+         [{"name": "repo3"}, {"name": "repo4"}])
+    ])
+    @patch("client.get_json")
+    def test_public_repos(self, org: str, repos_url: Dict, 
+                          repos_payload: List[Dict], 
+                          mock_get_json: MagicMock) -> None:
         """
-        Test the public_repos method.
+        Tests the `public_repos` method of GithubOrgClient.
 
         Args:
-            mock_public_repos_url (MagicMock): Mocked
-            _public_repos_url property.
+            org (str): The name of the organization to test.
+            repos_url (Dict): The mocked URL returned by _public_repos_url.
+            repos_payload (List[Dict]): The mocked list of repositories.
             mock_get_json (MagicMock): Mocked get_json function.
         """
-        mock_public_repos_url.return_value = \
-            "https://api.github.com/orgs/test/repos"
-        mock_get_json.return_value = [
-            {"name": "repo1"}, {"name": "repo2"}
-        ]
-        client = GithubOrgClient("test")
+        with patch("client.GithubOrgClient._public_repos_url", 
+                   new_callable=MagicMock) as mock_public_repos_url:
+            mock_public_repos_url.return_value = repos_url["repos_url"]
+            mock_get_json.return_value = repos_payload
 
-        # Test public_repos method
-        self.assertEqual(
-            client.public_repos(),
-            [{"name": "repo1"}, {"name": "repo2"}]
-        )
-        mock_get_json.assert_called_once_with(
-            "https://api.github.com/orgs/test/repos"
-        )
+            gh_org_client = GithubOrgClient(org)
+            
+            # Test that the public_repos method returns the expected list
+            self.assertEqual(gh_org_client.public_repos(), repos_payload)
+            
+            # Verify that _public_repos_url was called once
+            mock_public_repos_url.assert_called_once()
+            
+            # Verify that get_json was called once with the correct URL
+            mock_get_json.assert_called_once_with(repos_url["repos_url"])
 
     @parameterized.expand([
         ({"license": {"key": "my_license"}}, "my_license", True),
