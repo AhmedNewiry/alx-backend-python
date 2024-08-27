@@ -28,10 +28,10 @@ class TestGithubOrgClient(unittest.TestCase):
         ("abc", {"login": "abc"}),
     ])
     @patch("client.get_json")
-    def test_org(self, org: str, expected_resp: Dict, 
-                  mock_get_json: MagicMock) -> None:
+    def test_org(self, org: str, expected_resp: Dict,
+                 mock_get_json: MagicMock) -> None:
         """
-        Tests that the `org` method of GithubOrgClient returns the correct 
+        Tests that the `org` method of GithubOrgClient returns the correct
         response.
 
         Args:
@@ -41,15 +41,14 @@ class TestGithubOrgClient(unittest.TestCase):
         """
         mock_get_json.return_value = expected_resp
         gh_org_client = GithubOrgClient(org)
-        
+
         # Test that the org method returns the expected response
         self.assertEqual(gh_org_client.org, expected_resp)
-        
+
         # Verify that get_json was called once with the correct URL
         mock_get_json.assert_called_once_with(
             f"https://api.github.com/orgs/{org}"
         )
-
 
     def test_public_repos_url(self):
         """
@@ -61,7 +60,7 @@ class TestGithubOrgClient(unittest.TestCase):
         with patch(
                 'client.GithubOrgClient.org',
                 new_callable=property
-                ) as mock_org:
+        ) as mock_org:
             mock_org.return_value = {
                 "repos_url": "https://api.github.com/orgs/test/repos"
             }
