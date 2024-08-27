@@ -63,7 +63,8 @@ class TestGithubOrgClient(unittest.TestCase):
         Test that the _public_repos_url property returns the correct URL.
 
         Ensures that the `_public_repos_url` property returns the URL for
-        public repositories based on the organization data mocked by `mock_org`.
+        public repositories based on the organization
+        data mocked by `mock_org`.
         """
         test_payload = {
             "repos_url": "https://api.github.com/orgs/test_org/repos"
@@ -76,13 +77,18 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(public_repos_url, test_payload["repos_url"])
 
     @patch('client.get_json')
-    @patch('client.GithubOrgClient._public_repos_url', new_callable=PropertyMock)
+    @patch(
+        'client.GithubOrgClient._public_repos_url',
+        new_callable=PropertyMock)
     def test_public_repos(self, mock_public_repos_url, mock_get_json):
         """
-        Test that the public_repos method returns the correct list of repositories.
+        Test that the public_repos method returns the
+        correct list of repositories.
 
-        Verifies that the `public_repos` method retrieves the list of repositories
-        from the URL provided by `_public_repos_url` and matches the expected list.
+        Verifies that the `public_repos` method retrieves
+        the list of repositories
+        from the URL provided by `_public_repos_url`
+        and matches the expected list.
         """
         test_url = "https://api.github.com/orgs/test_org/repos"
         test_payload = [
@@ -170,9 +176,13 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         """
         mock_response = Mock()
         if 'orgs' in url:
-            mock_response.json.return_value = TestIntegrationGithubOrgClient.org_payload
+            mock_response.json.return_value = (
+                    TestIntegrationGithubOrgClient.org_payload
+            )
         elif 'repos' in url:
-            mock_response.json.return_value = TestIntegrationGithubOrgClient.repos_payload
+            mock_response.json.return_value = (
+                    TestIntegrationGithubOrgClient.repos_payload
+            )
         return mock_response
 
     def test_public_repos(self):
