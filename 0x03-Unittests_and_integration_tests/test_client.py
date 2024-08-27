@@ -4,20 +4,10 @@ Unit and integration tests for the GithubOrgClient class.
 """
 
 import unittest
-from typing import Dict
-from unittest.mock import (
-    MagicMock,
-    Mock,
-    PropertyMock,
-    patch,
-)
+from unittest.mock import patch, PropertyMock, Mock
 from parameterized import parameterized, parameterized_class
-from requests import HTTPError
-
-from client import (
-    GithubOrgClient
-)
-from fixtures import TEST_PAYLOAD
+from client import GithubOrgClient
+from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
 
 
 class TestGithubOrgClient(unittest.TestCase):
