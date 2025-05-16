@@ -11,6 +11,10 @@ def stream_users_in_batches(batch_size):
             password="",
             database="ALX_prodev"
         )
+    except mysql.connector.Error as e:
+        print(f"Error streaming batches: {e}")
+        return  # Return on connection failure
+    try:
         cursor = connection.cursor(dictionary=True)
         cursor.execute("SELECT * FROM user_data")
         while True:
@@ -22,10 +26,12 @@ def stream_users_in_batches(batch_size):
         connection.close()
     except mysql.connector.Error as e:
         print(f"Error streaming batches: {e}")
+        cursor.close()
+        connection.close()
 
 def batch_processing(batch_size):
-    """Process batches to filter users over 25."""
+    """Yield users over 25 from batches."""
     for batch in stream_users_in_batches(batch_size):  # Loop 1
         for user in batch:  # Loop 2
             if user['age'] > 25:
-                print(user)
+                yield user  # Yield filtered user
