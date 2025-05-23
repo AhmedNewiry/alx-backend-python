@@ -1,9 +1,10 @@
+from datetime import datetime
 import sqlite3
 import functools
 import logging
 
 # Configure logging to output to console (can be modified to log to a file)
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
 
 def log_queries(func):
     """
@@ -23,16 +24,17 @@ def log_queries(func):
             query = args[0]
         elif 'query' in kwargs and isinstance(kwargs['query'], str):
             query = kwargs['query']
+        now = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
         
         if query:
-            logging.info(f"Executing query: {query}")
+            logging.info(f"{now} - Executing query: {query}")
         else:
-            logging.warning("No query found in function arguments")
+            logging.warning("{now} - No query found in function arguments")
         
         try:
             return func(*args, **kwargs)
         except Exception as e:
-            logging.error(f"Error executing query: {e}")
+            logging.error(f"{now} - Error executing query: {e}")
             raise
     
     return wrapper
