@@ -8,6 +8,7 @@ from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
 from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
 import requests
+from utils import get_json
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -17,15 +18,15 @@ class TestGithubOrgClient(unittest.TestCase):
         ("google",),
         ("abc",),
     ])
-    @patch('client.get_json')
+    @patch('utils.get_json')
     def test_org(self, org_name: str, mock_get_json: unittest.mock.MagicMock) -> None:
         """Test that GithubOrgClient.org returns the correct organization payload.
 
         Args:
             org_name: Name of the organization to test.
-            mock_get_json: Mocked get_json function.
+            mock_get_json: Mocked get_json function from utils module.
         """
-        expected: Dict[str, str] = {"name": org_name}
+        expected: Dict[str, str] = {"login": org_name}
         mock_get_json.return_value = expected
         client: GithubOrgClient = GithubOrgClient(org_name)
         result: Dict[str, str] = client.org
@@ -35,12 +36,12 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(result, expected)
 
     def test_public_repos_url(self) -> None:
-        """Test that GithubOrgClient._public_repos_url returns the correct URL.
+        """Test that GithubOrgClient._public_repos_url returns correct URL.
 
-        Verifies the property returns the repos_url from the mocked org payload.
+        Verifies the property returns repos_url from mocked org payload.
         """
         with patch('client.GithubOrgClient.org',
-                  new_callable=PropertyMock) as mock_org:
+                   new_callable=PropertyMock) as mock_org:
             mock_org.return_value = {
                 "repos_url": "https://api.github.com/orgs/test/repos"
             }
@@ -48,27 +49,25 @@ class TestGithubOrgClient(unittest.TestCase):
             result: str = client._public_repos_url
             self.assertEqual(result, "https://api.github.com/orgs/test/repos")
 
-    @patch('client.get_json')
+    @patch('utils.get_json')
     def test_public_repos(self, mock_get_json: unittest.mock.MagicMock) -> None:
-        """Test that GithubOrgClient.public_repos returns the correct repo list.
+        """Test that GithubOrgClient.public_repos returns correct repo list.
 
         Args:
-            mock_get_json: Mocked get_json function.
+            mock_get_json: Mocked get_json function from utils module.
         """
         test_payload: List[Dict[str, str]] = [
             {"name": "repo1"},
             {"name": "repo2"}
         ]
         mock_get_json.return_value = test_payload
-
         with patch('client.GithubOrgClient._public_repos_url',
-                  new_callable=PropertyMock) as mock_public_repos_url:
-            mock_public_repos_url.return_value = "https://api.github.com/orgs/test/repos"
+                   new_callable=PropertyMock) as mock_url:
+            mock_url.return_value = "https://api.github.com/orgs/test/repos"
             client: GithubOrgClient = GithubOrgClient("test")
             result: List[str] = client.public_repos()
-
             self.assertEqual(result, ["repo1", "repo2"])
-            mock_public_repos_url.assert_called_once()
+            mock_url.assert_called_once()
             mock_get_json.assert_called_once_with(
                 "https://api.github.com/orgs/test/repos"
             )
@@ -82,7 +81,7 @@ class TestGithubOrgClient(unittest.TestCase):
         """Test that GithubOrgClient.has_license checks license correctly.
 
         Args:
-            repo: Repository dictionary containing license information.
+            repo: Repository dictionary with license information.
             license_key: License key to check against.
             expected: Expected boolean result.
         """
@@ -125,9 +124,9 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
                     """Return the JSON payload."""
                     return self.json_data
 
-            if url.endswith("/orgs/test"):
+            if url == "https://api.github.com/orgs/test":
                 return MockResponse(cls.org_payload)
-            elif url.endswith("/repos"):
+            if url == cls.org_payload.get("repos_url"):
                 return MockResponse(cls.repos_payload)
             return MockResponse(None)
 
