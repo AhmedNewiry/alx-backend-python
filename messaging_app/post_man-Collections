@@ -1,0 +1,153 @@
+{
+    "info": {
+        "name": "MessagingApp",
+        "_postman_id": "12345678-1234-1234-1234-1234567890ab",
+        "description": "Test suite for Messaging App API",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Obtain JWT Token",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\"username\": \"alice\", \"password\": \"password123\"}"
+                },
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/token/",
+                    "protocol": "http",
+                    "host": ["127.0.0.1"],
+                    "port": "8000",
+                    "path": ["api", "token", ""]
+                }
+            }
+        },
+        {
+            "name": "Create Conversation",
+            "request": {
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [{"key": "token", "value": "{{access_token}}"}]
+                },
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{}"
+                },
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/conversations/",
+                    "protocol": "http",
+                    "host": ["127.0.0.1"],
+                    "port": "8000",
+                    "path": ["api", "conversations", ""]
+                }
+            }
+        },
+        {
+            "name": "List Conversations",
+            "request": {
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [{"key": "token", "value": "{{access_token}}"}]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/conversations/",
+                    "protocol": "http",
+                    "host": ["127.0.0.1"],
+                    "port": "8000",
+                    "path": ["api", "conversations", ""]
+                }
+            }
+        },
+        {
+            "name": "Send Message",
+            "request": {
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [{"key": "token", "value": "{{access_token}}"}]
+                },
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\"message_body\": \"Hello!\"}"
+                },
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/conversations/{{conversation_id}}/messages/",
+                    "protocol": "http",
+                    "host": ["127.0.0.1"],
+                    "port": "8000",
+                    "path": ["api", "conversations", "{{conversation_id}}", "messages", ""]
+                }
+            }
+        },
+        {
+            "name": "List Messages",
+            "request": {
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [{"key": "token", "value": "{{access_token}}"}]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/conversations/{{conversation_id}}/messages/?sent_at__gte=2025-06-08T00:00:00Z",
+                    "protocol": "http",
+                    "host": ["127.0.0.1"],
+                    "port": "8000",
+                    "path": ["api", "conversations", "{{conversation_id}}", "messages", ""],
+                    "query": [
+                        {
+                            "key": "sent_at__gte",
+                            "value": "2025-06-08T00:00:00Z"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Unauthorized Access Test",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/conversations/",
+                    "protocol": "http",
+                    "host": ["127.0.0.1"],
+                    "port": "8000",
+                    "path": ["api", "conversations", ""]
+                }
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "access_token",
+            "value": ""
+        },
+        {
+            "key": "conversation_id",
+            "value": ""
+        }
+    ]
+}
