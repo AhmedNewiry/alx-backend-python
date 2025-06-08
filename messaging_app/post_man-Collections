@@ -30,7 +30,28 @@
             }
         },
         {
-            "name": "Create Conversation",
+            "name": "Basic Auth - List Conversations",
+            "request": {
+                "auth": {
+                    "type": "basic",
+                    "basic": [
+                        {"key": "username", "value": "alice"},
+                        {"key": "password", "value": "password123"}
+                    ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/conversations/",
+                    "protocol": "http",
+                    "host": ["127.0.0.1"],
+                    "port": "8000",
+                    "path": ["api", "conversations", ""]
+                }
+            }
+        },
+        {
+            "name": "JWT - Create Conversation",
             "request": {
                 "auth": {
                     "type": "bearer",
@@ -57,7 +78,7 @@
             }
         },
         {
-            "name": "List Conversations",
+            "name": "JWT - List Conversations",
             "request": {
                 "auth": {
                     "type": "bearer",
@@ -75,7 +96,7 @@
             }
         },
         {
-            "name": "Send Message",
+            "name": "JWT - Send Message",
             "request": {
                 "auth": {
                     "type": "bearer",
@@ -102,7 +123,7 @@
             }
         },
         {
-            "name": "List Messages",
+            "name": "JWT - List Messages",
             "request": {
                 "auth": {
                     "type": "bearer",
@@ -126,6 +147,78 @@
             }
         },
         {
+            "name": "JWT - Update Message (PUT)",
+            "request": {
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [{"key": "token", "value": "{{access_token}}"}]
+                },
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\"message_body\": \"Updated message!\"}"
+                },
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/conversations/{{conversation_id}}/messages/{{message_id}}/",
+                    "protocol": "http",
+                    "host": ["127.0.0.1"],
+                    "port": "8000",
+                    "path": ["api", "conversations", "{{conversation_id}}", "messages", "{{message_id}}", ""]
+                }
+            }
+        },
+        {
+            "name": "JWT - Partial Update Message (PATCH)",
+            "request": {
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [{"key": "token", "value": "{{access_token}}"}]
+                },
+                "method": "PATCH",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\"message_body\": \"Patched message!\"}"
+                },
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/conversations/{{conversation_id}}/messages/{{message_id}}/",
+                    "protocol": "http",
+                    "host": ["127.0.0.1"],
+                    "port": "8000",
+                    "path": ["api", "conversations", "{{conversation_id}}", "messages", "{{message_id}}", ""]
+                }
+            }
+        },
+        {
+            "name": "JWT - Delete Message",
+            "request": {
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [{"key": "token", "value": "{{access_token}}"}]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/conversations/{{conversation_id}}/messages/{{message_id}}/",
+                    "protocol": "http",
+                    "host": ["127.0.0.1"],
+                    "port": "8000",
+                    "path": ["api", "conversations", "{{conversation_id}}", "messages", "{{message_id}}", ""]
+                }
+            }
+        },
+        {
             "name": "Unauthorized Access Test",
             "request": {
                 "method": "GET",
@@ -138,6 +231,24 @@
                     "path": ["api", "conversations", ""]
                 }
             }
+        },
+        {
+            "name": "Non-Participant Access Test",
+            "request": {
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [{"key": "token", "value": "{{non_participant_token}}"}]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "http://127.0.0.1:8000/api/conversations/{{conversation_id}}/messages/",
+                    "protocol": "http",
+                    "host": ["127.0.0.1"],
+                    "port": "8000",
+                    "path": ["api", "conversations", "{{conversation_id}}", "messages", ""]
+                }
+            }
         }
     ],
     "variable": [
@@ -147,6 +258,14 @@
         },
         {
             "key": "conversation_id",
+            "value": ""
+        },
+        {
+            "key": "message_id",
+            "value": ""
+        },
+        {
+            "key": "non_participant_token",
             "value": ""
         }
     ]
