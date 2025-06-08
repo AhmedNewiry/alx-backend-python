@@ -1,11 +1,15 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
 
 class ConversationViewSet(viewsets.ModelViewSet):
     serializer_class = ConversationSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['created_at', 'updated_at']
 
     def get_queryset(self):
         """Return conversations where the authenticated user is a participant."""
@@ -15,10 +19,13 @@ class ConversationViewSet(viewsets.ModelViewSet):
         """Add the authenticated user as a participant when creating a conversation."""
         conversation = serializer.save()
         conversation.participants.add(self.request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['sent_at', 'conversation']
 
     def get_queryset(self):
         """Return messages from conversations where the authenticated user is a participant."""
@@ -26,4 +33,5 @@ class MessageViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         """Set the authenticated user as the sender when creating a message."""
-        serializer.save(sender=self.request.user)
+        message = serializer.save(sender=self.request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
