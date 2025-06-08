@@ -11,7 +11,7 @@ env.bak/
 venv.bak/
 myvenv
 # Django
-*.log
+
 *.pot
 *.pyc
 __pycache__
