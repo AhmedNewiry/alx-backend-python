@@ -1,8 +1,14 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 # Custom User Model
 class User(AbstractUser):
+    user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    password = models.CharField(max_length=128)
+    first_name = models.CharField(max_length=150)
+    last_name = models.CharField(max_length=150)
+    phone_number = models.CharField(max_length=15, blank=True)
     email = models.EmailField(unique=True)
     bio = models.TextField(max_length=500, blank=True)
 
@@ -10,20 +16,23 @@ class User(AbstractUser):
         return self.username
 
 # Conversation Model
+# Tracks participants and includes conversation_id as primary key
 class Conversation(models.Model):
+    conversation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     participants = models.ManyToManyField(User, related_name='conversations')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Conversation {self.id} with {', '.join([p.username for p in self.participants.all()])}"
+        return f"Conversation {self.conversation_id} with {', '.join([p.username for p in self.participants.all()])}"
 
 # Message Model
 class Message(models.Model):
+    message_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
-    content = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
+    message_body = models.TextField()
+    sent_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Message from {self.sender.username} at {self.timestamp}"
+        return f"Message from {self.sender.username} at {self.sent_at}"
