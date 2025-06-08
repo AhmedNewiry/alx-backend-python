@@ -14,6 +14,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsParticipantOfConversation]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['created_at', 'updated_at']
+    queryset = Conversation.objects.all()
 
     def get_queryset(self):
         """Return conversations where the authenticated user is a participant."""

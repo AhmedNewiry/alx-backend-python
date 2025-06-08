@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 from .views import ConversationViewSet, MessageViewSet
 
 base_router = DefaultRouter()
-base_router.register(r'conversations', ConversationViewSet)
+base_router.register(r'conversations', ConversationViewSet,  basename='conversation')
 nested_router = NestedDefaultRouter(base_router, r'conversations', lookup='conversation')
 nested_router.register(r'messages', MessageViewSet, basename='conversation-messages')
 
