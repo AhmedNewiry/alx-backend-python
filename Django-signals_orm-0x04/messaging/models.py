@@ -1,6 +1,7 @@
 from django.db import models
 import uuid
 from ..chats.models import User
+from .managers import UnreadMessagesManager 
 
 class Message(models.Model):
     message_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
