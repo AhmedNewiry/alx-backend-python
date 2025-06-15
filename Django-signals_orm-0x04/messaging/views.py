@@ -2,6 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from django.views.decorators.cache import cache_page
 from .models import  Message, MessageHistory
 from chats.models import User
 from .serializers import  MessageSerializer, MessageHistorySerializer
@@ -54,6 +55,11 @@ class MessageViewSet(viewsets.ModelViewSet):
         ).only('message_id', 'sender', 'receiver', 'content', 'timestamp', 'unread')
         serializer = MessageSerializer(messages, many=True, context={'request': request})
         return Response(serializer.data)
+
+    @cache_page(60)
+    def list(self, request, *args, **kwargs):
+        """Cache the list of messages for 60 seconds."""
+        return super().list(request, *args, **kwargs)
 
 class MessageHistoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = MessageHistory.objects.all()
