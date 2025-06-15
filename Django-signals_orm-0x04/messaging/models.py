@@ -11,8 +11,15 @@ class Message(models.Model):
     edited = models.BooleanField(default=False)
     edited_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='edited_messages')
 
+    parent_message = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
+
     def __str__(self):
         return f"Message from {self.sender} to {self.receiver}"
+
+    def get_thread(self):
+        """Recursively fetch all replies for this message."""
+        replies = self.replies.select_related('sender', 'receiver', 'edited_by', 'parent_message').all()
+        return replies
 
 class Notification(models.Model):
     notification_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
