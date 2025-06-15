@@ -8,7 +8,7 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ('message_id', 'sender', 'receiver', 'content', 'timestamp','qedited')
+    list_display = ('message_id', 'sender', 'receiver', 'content', 'timestamp','edited', 'edited_by')
     search_fields = ('content',)
     list_filter = ('timestamp',)
 

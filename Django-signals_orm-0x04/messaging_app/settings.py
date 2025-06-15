@@ -127,6 +127,7 @@ SIMPLE_JWT = {
 AUTH_USER_MODEL = 'chats.User'
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
+AUTH_USER_MODEL = 'messaging.User'
 
 LANGUAGE_CODE = 'en-us'
 
