@@ -12,6 +12,11 @@ class Message(models.Model):
     edited_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='edited_messages')
 
     parent_message = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
+    unread = models.BooleanField(default=True)
+
+    objects = models.Manager()
+    unread = UnreadMessagesManager()
+
 
     def __str__(self):
         return f"Message from {self.sender} to {self.receiver}"
