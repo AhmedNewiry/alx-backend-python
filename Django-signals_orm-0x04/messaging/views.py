@@ -36,14 +36,23 @@ class MessageViewSet(viewsets.ModelViewSet):
         serializer.save(sender=self.request.user)
 
     def perform_update(self, serializer):
-        """Set edited_by to current user on update."""
-        serializer.save(edited_by=self.request.user)
+        """Set edited_by and mark as read on update."""
+        serializer.save(edited_by=self.request.user, unread=False)
 
     @action(detail=True, methods=['get'])
     def thread(self, request, pk=None):
         """Fetch the message and its threaded replies."""
         message = self.get_object()
         serializer = MessageSerializer(message, context={'request': request})
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'])
+    def unread(self, request):
+        """Fetch unread messages for the user."""
+        messages = Message.unread.unread_for_user(request.user).select_related(
+            'sender', 'receiver'
+        ).only('message_id', 'sender', 'receiver', 'content', 'timestamp', 'unread')
+        serializer = MessageSerializer(messages, many=True, context={'request': request})
         return Response(serializer.data)
 
 class MessageHistoryViewSet(viewsets.ReadOnlyModelViewSet):
