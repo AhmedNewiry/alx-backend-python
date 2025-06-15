@@ -1,7 +1,8 @@
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save, pre_save, post_delete
 from django.dispatch import receiver
 from .models import Message, Notification, MessageHistory
-
+import logging
+from ..chats.models import User
 @receiver(post_save, sender=Message)
 def create_notification(sender, instance, created, **kwargs):
     """Create a notification for the receiver when a new message is created."""
@@ -27,3 +28,11 @@ def log_message_edit(sender, instance, **kwargs):
                 instance.edited_by = instance.sender
         except Message.DoesNotExist:
             pass
+
+@receiver(post_delete, sender=User)
+def cleanup_user_data(sender, instance, **kwargs):
+    """Log user deletion and ensure related data is cleaned up."""
+    logging.info(f"User {instance.username} (ID: {instance.user_id}) deleted.")
+    Message.objects.filter(sender=instance).delete()
+    Message.objects.filter(receiver=instance).delete()
+    Notification.objects.filter(user=instance).delete()
