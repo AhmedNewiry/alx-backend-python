@@ -11,7 +11,7 @@ class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
-        fields = ['message_id', 'sender', 'receiver', 'content', 'timestamp', 'edited', 'edited_by', 'parent_message', 'replies']
+        fields = ['message_id', 'sender', 'receiver', 'content', 'timestamp', 'edited', 'edited_by', 'parent_message', 'replies', 'unread']
 
     def get_replies(self, obj):
         """Recursively serialize replies."""
